@@ -123,8 +123,9 @@ export default function Landing() {
                 <li>✓ Real-time prices</li>
                 <li>✓ Wallet balance check</li>
                 <li>✓ Hotspot status</li>
-                <li>✓ Manual refresh</li>
+                <li>✓ Auto-refresh (5 min)</li>
                 <li>✓ Telegram alerts</li>
+                <li>✓ CSV export</li>
               </ul>
               <a
                 href="/"
@@ -143,9 +144,7 @@ export default function Landing() {
               <ul className="text-left space-y-2 text-sm text-[#e5e5e5] mb-8">
                 <li>✓ Everything in Free</li>
                 <li>✓ <strong>Unlimited history</strong></li>
-                <li>✓ <strong>Auto-refresh</strong></li>
                 <li>✓ <strong>Email notifications</strong></li>
-                <li>✓ CSV export</li>
                 <li>✓ Priority support</li>
               </ul>
               <button
