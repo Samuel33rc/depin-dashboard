@@ -60,8 +60,8 @@ export default function Home() {
   const [alertStatus, setAlertStatus] = useState<string>('');
   const [hotspotStatus, setHotspotStatus] = useState<HotspotStatusData | null>(null);
   const [checkingHotspots, setCheckingHotspots] = useState(false);
-  const [autoRefresh, setAutoRefresh] = useState(false);
-  const [refreshInterval, setRefreshInterval] = useState(60);
+  const [autoRefresh, setAutoRefresh] = useState(true);
+  const [refreshInterval, setRefreshInterval] = useState(300);
   const [history, setHistory] = useState<HistoricalDataPoint[]>([]);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -502,37 +502,66 @@ export default function Home() {
           )}
 
           {(data || dimoData) && (
-            <div className="bg-[#111] border border-[#333] p-6">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-[#00d4aa]">05</span>
-                  <h3 className="text-sm font-bold uppercase tracking-widest text-[#999]">Fleet Overview</h3>
+            <div className="space-y-4">
+              {data && (
+                <div className="bg-[#111] border border-[#333] p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="text-xs text-[#ff6b35]">05</span>
+                    <h3 className="text-sm font-bold uppercase tracking-widest text-[#999]">Helium Health</h3>
+                    <span className="ml-auto text-xs text-[#444]">
+                      {data.heliumStats.activeHotspots > 0 ? '● Online' : '○ Offline'}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="bg-[#0a0a0a] border border-[#222] p-4 text-center">
+                      <p className="text-3xl font-bold text-[#e5e5e5]">{data.heliumStats.totalHotspots.toLocaleString()}</p>
+                      <p className="text-[10px] text-[#666] uppercase tracking-wider mt-1">Total Hotspots</p>
+                    </div>
+                    <div className="bg-[#0a0a0a] border border-[#222] p-4 text-center">
+                      <p className="text-3xl font-bold text-[#00d4aa]">{data.heliumStats.activeHotspots.toLocaleString()}</p>
+                      <p className="text-[10px] text-[#666] uppercase tracking-wider mt-1">Online</p>
+                    </div>
+                    <div className="bg-[#0a0a0a] border border-[#222] p-4 text-center">
+                      <p className="text-3xl font-bold text-[#ff4444]">{data.heliumStats.totalHotspots - data.heliumStats.activeHotspots}</p>
+                      <p className="text-[10px] text-[#666] uppercase tracking-wider mt-1">Offline</p>
+                    </div>
+                  </div>
                 </div>
+              )}
+
+              {dimoData && (
+                <div className="bg-[#111] border border-[#333] p-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="text-xs text-[#a78bfa]">06</span>
+                    <h3 className="text-sm font-bold uppercase tracking-widest text-[#999]">DIMO Health</h3>
+                    <span className="ml-auto text-xs text-[#444]">
+                      {dimoData.totalVehicles > 0 ? '● Online' : '○ Offline'}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="bg-[#0a0a0a] border border-[#222] p-4 text-center">
+                      <p className="text-3xl font-bold text-[#e5e5e5]">{dimoData.totalVehicles}</p>
+                      <p className="text-[10px] text-[#666] uppercase tracking-wider mt-1">Total Vehicles</p>
+                    </div>
+                    <div className="bg-[#0a0a0a] border border-[#222] p-4 text-center">
+                      <p className="text-3xl font-bold text-[#00d4aa]">{dimoData.totalVehicles}</p>
+                      <p className="text-[10px] text-[#666] uppercase tracking-wider mt-1">Connected</p>
+                    </div>
+                    <div className="bg-[#0a0a0a] border border-[#222] p-4 text-center">
+                      <p className="text-3xl font-bold text-[#666]">0</p>
+                      <p className="text-[10px] text-[#666] uppercase tracking-wider mt-1">Disconnected</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="flex justify-end">
                 <button
                   onClick={exportToCSV}
                   className="text-xs text-[#666] hover:text-[#ff6b35] uppercase tracking-wider transition-colors"
                 >
                   ↓ Export Data
                 </button>
-              </div>
-              
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-[#0a0a0a] border border-[#222] p-4 text-center">
-                  <p className="text-3xl font-bold text-[#e5e5e5]">{data?.heliumStats.totalHotspots.toLocaleString() || '0'}</p>
-                  <p className="text-[10px] text-[#666] uppercase tracking-wider mt-1">Hotspots</p>
-                </div>
-                <div className="bg-[#0a0a0a] border border-[#222] p-4 text-center">
-                  <p className="text-3xl font-bold text-[#e5e5e5]">{dimoData?.totalVehicles || '0'}</p>
-                  <p className="text-[10px] text-[#666] uppercase tracking-wider mt-1">Vehicles</p>
-                </div>
-                <div className="bg-[#0a0a0a] border border-[#222] p-4 text-center">
-                  <p className="text-3xl font-bold text-[#00d4aa]">{data?.heliumStats.activeHotspots.toLocaleString() || '0'}</p>
-                  <p className="text-[10px] text-[#666] uppercase tracking-wider mt-1">Online</p>
-                </div>
-                <div className="bg-[#0a0a0a] border border-[#222] p-4 text-center">
-                  <p className="text-3xl font-bold text-[#ff4444]">{(data?.heliumStats.totalHotspots || 0) - (data?.heliumStats.activeHotspots || 0)}</p>
-                  <p className="text-[10px] text-[#666] uppercase tracking-wider mt-1">Offline</p>
-                </div>
               </div>
             </div>
           )}
