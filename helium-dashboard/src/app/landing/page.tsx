@@ -115,7 +115,7 @@ export default function Landing() {
             <span className="text-[#ff6b35]">//</span> Pricing
           </h2>
           
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
             <div className="bg-[#111] border border-[#333] p-8 rounded-xl text-center">
               <h3 className="text-lg font-bold text-[#e5e5e5] mb-2">Free</h3>
               <p className="text-4xl font-bold text-[#e5e5e5] mb-6">$0</p>
@@ -152,23 +152,6 @@ export default function Landing() {
                 className="block w-full bg-[#ff6b35] hover:bg-[#ff8555] text-black font-bold py-2 rounded-lg transition-colors"
               >
                 Coming Soon
-              </button>
-            </div>
-
-            <div className="bg-[#111] border border-[#333] p-8 rounded-xl text-center">
-              <h3 className="text-lg font-bold text-[#a78bfa] mb-2">Enterprise</h3>
-              <p className="text-4xl font-bold text-[#e5e5e5] mb-6">Custom</p>
-              <ul className="text-left space-y-2 text-sm text-[#666] mb-8">
-                <li>✓ Everything in Pro</li>
-                <li>✓ Multi-user access</li>
-                <li>✓ Custom integrations</li>
-                <li>✓ White-label</li>
-                <li>✓ Dedicated support</li>
-              </ul>
-              <button
-                className="block w-full border border-[#333] text-[#666] py-2 rounded-lg hover:border-[#a78bfa] hover:text-[#a78bfa] transition-colors"
-              >
-                Contact Us
               </button>
             </div>
           </div>
