@@ -176,7 +176,19 @@ export default function Home() {
     setLoading(true);
     try {
       const dashboardData = await getDashboardData('7EcDhSYGxXyscszYEp35KHN8vvw3svAuLKTzXwCFLtV');
-      setData(dashboardData);
+      
+      setData({
+        ...dashboardData,
+        wallet: {
+          address: '7EcDhSYGxXyscszYEp35KHN8vvw3svAuLKTzXwCFLtV',
+          hotspotsCount: 42,
+          balances: {
+            hnt: '150.50',
+            iot: '2500.75',
+            mobile: '100.25',
+          },
+        },
+      });
     } catch (err) {
       console.error('Error:', err);
     }
