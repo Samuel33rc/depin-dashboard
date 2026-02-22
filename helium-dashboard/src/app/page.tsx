@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { getDashboardData } from '@/lib/helium-api';
 import { getVehicleData } from '@/lib/dimo-api';
 
@@ -9,7 +9,20 @@ interface DashboardData {
   iotPrice: { usd: number };
   mobilePrice: { usd: number };
   heliumStats: { totalHotspots: number; activeHotspots: number };
+  wallet?: {
+    address: string;
+    hotspotsCount: number;
+    balances: { hnt: string; iot: string; mobile: string };
+  };
   lastUpdated: string;
+}
+
+interface HistoricalDataPoint {
+  timestamp: string;
+  hntPrice: number;
+  iotPrice: number;
+  mobilePrice: number;
+  totalValue: number;
 }
 
 interface DIMOData {
@@ -47,8 +60,47 @@ export default function Home() {
   const [alertStatus, setAlertStatus] = useState<string>('');
   const [hotspotStatus, setHotspotStatus] = useState<HotspotStatusData | null>(null);
   const [checkingHotspots, setCheckingHotspots] = useState(false);
+  const [autoRefresh, setAutoRefresh] = useState(false);
+  const [refreshInterval, setRefreshInterval] = useState(60);
+  const [history, setHistory] = useState<HistoricalDataPoint[]>([]);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const fetchData = async () => {
+  useEffect(() => {
+    const saved = localStorage.getItem('depin-history');
+    if (saved) {
+      try {
+        setHistory(JSON.parse(saved));
+      } catch (e) {
+        console.error('Error loading history:', e);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (autoRefresh && data) {
+      intervalRef.current = setInterval(() => {
+        fetchData(false);
+      }, refreshInterval * 1000);
+    } else if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [autoRefresh, refreshInterval, data]);
+
+  const calculateWalletValue = () => {
+    if (!data?.wallet) return 0;
+    const { hnt, iot, mobile } = data.wallet.balances;
+    return (
+      parseFloat(hnt || '0') * data.hntPrice.usd +
+      parseFloat(iot || '0') * data.iotPrice.usd +
+      parseFloat(mobile || '0') * data.mobilePrice.usd
+    );
+  };
+
+  const fetchData = async (saveHistory = true) => {
     setLoading(true);
     try {
       const dashboardData = await getDashboardData(heliumWallet || undefined);
@@ -57,6 +109,21 @@ export default function Home() {
       if (dimoWallet) {
         const vehicleData = await getVehicleData(dimoWallet);
         setDimoData(vehicleData);
+      }
+
+      if (saveHistory && dashboardData) {
+        const walletValue = calculateWalletValue();
+        const newPoint: HistoricalDataPoint = {
+          timestamp: new Date().toISOString(),
+          hntPrice: dashboardData.hntPrice.usd,
+          iotPrice: dashboardData.iotPrice.usd,
+          mobilePrice: dashboardData.mobilePrice.usd,
+          totalValue: walletValue || dashboardData.hntPrice.usd * 1000,
+        };
+        
+        const updatedHistory = [...history, newPoint].slice(-50);
+        setHistory(updatedHistory);
+        localStorage.setItem('depin-history', JSON.stringify(updatedHistory));
       }
     } catch (err) {
       console.error('Error fetching data:', err);
@@ -236,7 +303,7 @@ export default function Home() {
 
               <div className="flex gap-3 pt-2">
                 <button
-                  onClick={fetchData}
+                  onClick={() => fetchData(true)}
                   disabled={loading}
                   className="bg-[#ff6b35] hover:bg-[#ff8555] disabled:bg-[#444] text-black font-bold py-3 px-8 text-sm uppercase tracking-wider transition-colors"
                 >
@@ -248,6 +315,12 @@ export default function Home() {
                   className="border border-[#333] hover:border-[#ff6b35] text-[#666] hover:text-[#ff6b35] py-3 px-6 text-sm uppercase tracking-wider transition-colors"
                 >
                   Demo Data
+                </button>
+                <button
+                  onClick={() => setAutoRefresh(!autoRefresh)}
+                  className={`border ${autoRefresh ? 'border-[#00d4aa] text-[#00d4aa]' : 'border-[#333] text-[#666]'} hover:border-[#00d4aa] py-3 px-4 text-sm uppercase tracking-wider transition-colors`}
+                >
+                  {autoRefresh ? '◉ Live' : '○ Live'}
                 </button>
               </div>
             </div>
@@ -350,6 +423,68 @@ export default function Home() {
                   <p className="text-[10px] text-[#666] uppercase tracking-wider mb-1">MOBILE</p>
                   <p className="text-2xl font-bold text-[#a78bfa]">${data.mobilePrice.usd.toFixed(4)}</p>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {data?.wallet && (
+            <div className="bg-gradient-to-r from-[#ff6b35]/10 to-[#00d4aa]/10 border border-[#333] p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-xs text-[#ff6b35]">04b</span>
+                <h3 className="text-sm font-bold uppercase tracking-widest text-[#999]">Wallet Earnings</h3>
+              </div>
+              
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="bg-[#0a0a0a] border border-[#222] p-3 text-center">
+                  <p className="text-xs text-[#666] uppercase mb-1">HNT Balance</p>
+                  <p className="text-lg font-bold text-[#ff6b35]">{parseFloat(data.wallet.balances.hnt || '0').toFixed(2)}</p>
+                  <p className="text-xs text-[#444]">${(parseFloat(data.wallet.balances.hnt || '0') * data.hntPrice.usd).toFixed(2)}</p>
+                </div>
+                <div className="bg-[#0a0a0a] border border-[#222] p-3 text-center">
+                  <p className="text-xs text-[#666] uppercase mb-1">IOT Balance</p>
+                  <p className="text-lg font-bold text-[#00d4aa]">{parseFloat(data.wallet.balances.iot || '0').toFixed(2)}</p>
+                  <p className="text-xs text-[#444]">${(parseFloat(data.wallet.balances.iot || '0') * data.iotPrice.usd).toFixed(2)}</p>
+                </div>
+                <div className="bg-[#0a0a0a] border border-[#222] p-3 text-center">
+                  <p className="text-xs text-[#666] uppercase mb-1">MOBILE Balance</p>
+                  <p className="text-lg font-bold text-[#a78bfa]">{parseFloat(data.wallet.balances.mobile || '0').toFixed(2)}</p>
+                  <p className="text-xs text-[#444]">${(parseFloat(data.wallet.balances.mobile || '0') * data.mobilePrice.usd).toFixed(2)}</p>
+                </div>
+                <div className="bg-[#0a0a0a] border border-[#222] p-3 text-center">
+                  <p className="text-xs text-[#666] uppercase mb-1">Total Value</p>
+                  <p className="text-lg font-bold text-white">${calculateWalletValue().toFixed(2)}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {history.length > 1 && (
+            <div className="bg-[#111] border border-[#333] p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-xs text-[#a78bfa]">07</span>
+                <h3 className="text-sm font-bold uppercase tracking-widest text-[#999]">Price History</h3>
+                <span className="ml-auto text-xs text-[#444]">{history.length} data points</span>
+              </div>
+              
+              <div className="space-y-2">
+                {history.slice(-5).reverse().map((point, idx) => (
+                  <div key={idx} className="flex justify-between items-center py-2 border-b border-[#222] text-xs font-mono">
+                    <span className="text-[#666]">{new Date(point.timestamp).toLocaleString()}</span>
+                    <div className="flex gap-4">
+                      <span className="text-[#ff6b35]">HNT ${point.hntPrice.toFixed(2)}</span>
+                      <span className="text-[#00d4aa]">${point.totalValue.toFixed(2)}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="mt-4 flex gap-2">
+                <button
+                  onClick={() => { setHistory([]); localStorage.removeItem('depin-history'); }}
+                  className="text-xs text-[#666] hover:text-[#ff4444] uppercase tracking-wider"
+                >
+                  Clear History
+                </button>
               </div>
             </div>
           )}
