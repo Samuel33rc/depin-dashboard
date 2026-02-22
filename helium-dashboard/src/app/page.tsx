@@ -226,7 +226,7 @@ export default function Home() {
           botToken: telegramToken,
           chatId: telegramChatId,
           type: 'warning',
-          title: 'DePIN Dashboard Test',
+          title: 'DePIN Ops Test',
           message: 'Telegram alerts are configured correctly!'
         })
       });
@@ -248,7 +248,7 @@ export default function Home() {
     const vehicleRows = dimoData?.vehicles ? dimoData.vehicles.map(v => [v.tokenId, `${v.year} ${v.make} ${v.model}`]) : [];
     
     const rows = [
-      ['DePIN Dashboard Export', new Date().toISOString()],
+      ['DePIN Ops Export', new Date().toISOString()],
       [''],
       ['Token Prices'],
       ['Token', 'Price (USD)'],

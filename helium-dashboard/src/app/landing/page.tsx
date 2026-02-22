@@ -43,7 +43,7 @@ export default function Landing() {
         <header className="text-center mb-16">
           <div className="inline-flex items-center gap-2 bg-[#ff6b35]/10 border border-[#ff6b35]/30 px-4 py-2 rounded-full mb-6">
             <span className="w-2 h-2 bg-[#ff6b35] rounded-full animate-pulse"></span>
-            <span className="text-xs text-[#ff6b35] uppercase tracking-widest">DePIN Operations Center</span>
+            <span className="text-xs text-[#ff6b35] uppercase tracking-widest">DePIN Ops</span>
           </div>
           
           <h1 className="text-5xl md:text-6xl font-bold mb-6">
@@ -213,7 +213,7 @@ export default function Landing() {
 
         <footer className="text-center text-[#333] text-sm">
           <p>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</p>
-          <p className="mt-4">DePIN Dashboard © 2026</p>
+          <p className="mt-4">DePIN Ops © 2026</p>
           <p className="mt-2 text-[#222]">
             Built for DePIN operators, by DePIN operators
           </p>

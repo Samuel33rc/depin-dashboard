@@ -1,6 +1,6 @@
-# Helium DePIN Dashboard
+# DePIN Ops
 
-Un dashboard pour suivre les prix et statistiques du réseau Helium.
+Unified dashboard for DePIN monitoring and management.
 
 ## Fonctionnalités
 

@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     const alert: AlertMessage = {
       type: type || 'warning',
       title: title || 'DePIN Alert',
-      message: message || 'Alert from DePIN Dashboard',
+      message: message || 'Alert from DePIN Ops',
       timestamp: new Date().toISOString()
     };
 
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   return NextResponse.json({
-    message: 'DePIN Dashboard Alerts API',
+    message: 'DePIN Ops Alerts API',
     methods: ['POST'],
     body: {
       botToken: 'string (required)',
