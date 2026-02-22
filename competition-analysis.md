@@ -16,28 +16,16 @@
 | **Host splitting** | ✅ (Pro) | ❌ Not yet |
 | **Multi-wallet** | ✅ | ⚠️ Separate inputs |
 
-## Competitive Advantages
+### DIMO - Our Differentiator
 
-### What We Do Better
+| Aspect | Note |
+|--------|------|
+| **Status** | B2B-focused, smaller than Helium |
+| **Value** | Low effort to maintain, some users may want it |
+| **API** | Works, returns vehicle data |
+| **Keep it** | "Nice to have" - no harm in including |
 
-| Advantage | Description |
-|----------|-------------|
-| **DIMO Support** | Only dashboard with Helium + DIMO |
-| **Telegram Alerts** | Free Telegram alerts (competitor reserves for Pro) |
-| **CSV Export Free** | Export included in free tier |
-| **Modern UI** | Terminal aesthetic, distinctive design |
-| **Open Source** | Users can self-host |
-| **0€ to Run** | Vercel free tier, no infrastructure costs |
-
-### What Competitor Does Better
-
-| Weakness | Description |
-|----------|-------------|
-| **More Networks** | GEODNET, WeatherXM support |
-| **SMS Alerts** | We only have Telegram |
-| **Larger User Base** | Established product, more reviews |
-| **Host Splitting** | Revenue sharing feature |
-| **Email Reports** | Weekly reward summaries |
+**Our focus remains on Helium operators as primary users.**
 
 ## Go-to-Market Strategy
 
