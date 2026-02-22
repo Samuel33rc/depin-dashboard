@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 const HELIUM_API = 'https://entities.nft.helium.io/v2';
 
 export interface Hotspot {
@@ -34,8 +32,8 @@ export async function checkHotspotStatus(walletAddress: string): Promise<Hotspot
   if (!walletAddress) return null;
 
   try {
-    const response = await axios.get(`${HELIUM_API}/wallet/${walletAddress}`);
-    const data = response.data;
+    const response = await fetch(`${HELIUM_API}/wallet/${walletAddress}`);
+    const data = await response.json();
 
     const hotspots: Hotspot[] = (data.hotspots || []).map((h: HeliumApiHotspot) => ({
       id: h.address || h.id || '',

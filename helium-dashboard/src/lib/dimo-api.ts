@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 const DIMO_API = 'https://identity-api.dimo.zone';
 
 export interface Vehicle {
@@ -50,18 +48,17 @@ export async function getVehicleData(walletAddress: string): Promise<DIMOStats |
       }
     `;
 
-    const response = await axios.post<DimoApiResponse>(
-      DIMO_API,
-      {
+    const response = await fetch(DIMO_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
         query,
         variables: { address: walletAddress }
-      },
-      {
-        headers: { 'Content-Type': 'application/json' }
-      }
-    );
+      })
+    });
 
-    const vehicles = response.data.data?.vehicles?.nodes || [];
+    const responseData: DimoApiResponse = await response.json();
+    const vehicles = responseData.data?.vehicles?.nodes || [];
     
     return {
       totalVehicles: vehicles.length,

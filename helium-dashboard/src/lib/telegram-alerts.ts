@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 const TELEGRAM_API = 'https://api.telegram.org';
 
 export interface TelegramConfig {
@@ -34,16 +32,21 @@ ${alert.message}
 _Time: ${alert.timestamp || new Date().toISOString()}_
     `.trim();
 
-    const response = await axios.post(
+    const response = await fetch(
       `${TELEGRAM_API}/bot${config.botToken}/sendMessage`,
       {
-        chat_id: config.chatId,
-        text: message,
-        parse_mode: 'Markdown'
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: config.chatId,
+          text: message,
+          parse_mode: 'Markdown'
+        })
       }
     );
 
-    return response.data.ok === true;
+    const data = await response.json();
+    return data.ok === true;
   } catch (error) {
     console.error('Error sending Telegram alert:', error);
     return false;
@@ -55,11 +58,11 @@ export async function checkHeliumHotspotStatus(
   config: TelegramConfig
 ): Promise<void> {
   try {
-    const response = await axios.get(
+    const response = await fetch(
       `https://entities.nft.helium.io/v2/wallet/${walletAddress}`
     );
     
-    const data = response.data;
+    const data = await response.json();
     const hotspots = data.hotspots || [];
     const offlineHotspots = hotspots.filter((h: { status?: { online?: boolean } }) => h.status?.online !== true);
     

@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 const COINGECKO_API = 'https://api.coingecko.com/api/v3';
 const HELIUM_API = 'https://entities.nft.helium.io/v2';
 
@@ -40,14 +38,15 @@ export function isValidSolanaAddress(address: string): boolean {
 
 export async function getTokenPrices(): Promise<{ hnt: TokenPrice; iot: TokenPrice; mobile: TokenPrice }> {
   try {
-    const response = await axios.get(
+    const response = await fetch(
       `${COINGECKO_API}/simple/price?ids=helium,helium-iot,mobile-token&vs_currencies=usd`
     );
+    const data = await response.json();
     
     return {
-      hnt: { usd: response.data.helium?.usd || 0 },
-      iot: { usd: response.data['helium-iot']?.usd || 0 },
-      mobile: { usd: response.data['mobile-token']?.usd || 0 },
+      hnt: { usd: data.helium?.usd || 0 },
+      iot: { usd: data['helium-iot']?.usd || 0 },
+      mobile: { usd: data['mobile-token']?.usd || 0 },
     };
   } catch (error) {
     console.error('Error fetching token prices:', error);
@@ -62,12 +61,15 @@ export async function getTokenPrices(): Promise<{ hnt: TokenPrice; iot: TokenPri
 export async function getHeliumStats(): Promise<HeliumStats> {
   try {
     const [iotResponse, mobileResponse] = await Promise.all([
-      axios.get(`${HELIUM_API}/hotspots/pagination-metadata?subnetwork=iot`),
-      axios.get(`${HELIUM_API}/hotspots/pagination-metadata?subnetwork=mobile`),
+      fetch(`${HELIUM_API}/hotspots/pagination-metadata?subnetwork=iot`),
+      fetch(`${HELIUM_API}/hotspots/pagination-metadata?subnetwork=mobile`),
     ]);
 
-    const iotHotspots = iotResponse.data.totalItems || 0;
-    const mobileHotspots = mobileResponse.data.totalItems || 0;
+    const iotData = await iotResponse.json();
+    const mobileData = await mobileResponse.json();
+
+    const iotHotspots = iotData.totalItems || 0;
+    const mobileHotspots = mobileData.totalItems || 0;
 
     return {
       totalHotspots: iotHotspots + mobileHotspots,
@@ -91,8 +93,8 @@ export async function getWalletData(walletAddress: string): Promise<HeliumWallet
   }
 
   try {
-    const response = await axios.get(`${HELIUM_API}/wallet/${walletAddress}`);
-    const data = response.data;
+    const response = await fetch(`${HELIUM_API}/wallet/${walletAddress}`);
+    const data = await response.json();
 
     const getBalance = (mint: string) => {
       const balance = data.balances?.find((b: { mint: string; balance: string }) => b.mint === mint);
