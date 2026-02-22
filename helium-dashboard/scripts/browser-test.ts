@@ -15,8 +15,8 @@ async function runBrowserTest() {
 
     // Test with a real Helium wallet (public hotspot owner)
     const testWallet = '13zraRWLRUVtP3CnsL8hk3kC6UzXkS7REqDMkyG3mL3L';
-    await page.fill('input[placeholder*="Helium"]', testWallet);
-    await page.click('button:has-text("Check")');
+    await page.fill('input[placeholder*="Solana"]', testWallet);
+    await page.click('button:has-text("Execute")');
     
     // Wait for API response
     await page.waitForTimeout(3000);
@@ -85,8 +85,8 @@ async function runBrowserTest() {
     await errorPage.goto('http://localhost:3000', { waitUntil: 'networkidle' });
     
     // Test with invalid wallet address
-    await errorPage.fill('input[placeholder*="Helium"]', 'invalid_wallet_123');
-    await errorPage.click('button:has-text("Check")');
+    await errorPage.fill('input[placeholder*="Solana"]', 'invalid_wallet_123');
+    await errorPage.click('button:has-text("Execute")');
     await errorPage.waitForTimeout(3000);
     
     const hasErrorMessage = await errorPage.locator('text=Error').first().isVisible().catch(() => false) ||
@@ -99,7 +99,7 @@ async function runBrowserTest() {
     }
     
     // Test with empty wallet - just click and see if it handles gracefully
-    await errorPage.click('button:has-text("Check")').catch(() => {
+    await errorPage.click('button:has-text("Execute")').catch(() => {
       console.log('✓ Empty input: Button correctly disabled');
     });
     await errorPage.waitForTimeout(1000);

@@ -18,6 +18,9 @@
 | 10 | API /api/alerts | ✅ Fait |
 | 11 | Hotspot Monitor | ✅ Fait |
 | 12 | API /api/hotspots | ✅ Fait |
+| 13 | Unified Overview section | ✅ Fait |
+| 14 | Export CSV | ✅ Fait |
+| 15 | Design Polish | ✅ Fait (terminal/ops center aesthetic) |
 | - | **Total unit tests** | **4 passent** |
 | - | **Total browser tests** | **9 passent** |
 
@@ -213,19 +216,22 @@ export async function sendAlert(message: string) {
 ## Roadmap restante
 
 ### Week 1: DIMO + Wallet Input
-- [ ] Créer DIMO API module
-- [ ] Ajouter input wallet address
-- [ ] Afficher données DIMO
-- [ ] Tests
+- [x] Créer DIMO API module
+- [x] Ajouter input wallet address
+- [x] Afficher données DIMO
+- [x] Tests
 
 ### Week 2: Alerts + Deployment
-- [ ] Setup Telegram Bot
-- [ ] Script monitoring offline
-- [ ] GitHub push
+- [x] Setup Telegram Bot
+- [x] Script monitoring offline
+- [x] GitHub push
+- [x] Unified overview section
+- [x] Export CSV
 - [ ] Vercel deploy
 
 ### Week 3: Améliorations
-- [ ] Multi-wallet support
+- [ ] Historical tracking (long terme)
+- [ ] Multi-wallet support (unified)
 - [ ] Design polish
 - [ ] User feedback
 
