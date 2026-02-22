@@ -77,11 +77,26 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (autoRefresh && data) {
+    if (autoRefresh) {
+      fetchData(false);
       intervalRef.current = setInterval(() => {
         fetchData(false);
       }, refreshInterval * 1000);
     } else if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [autoRefresh, refreshInterval]);
+
+  useEffect(() => {
+    if (autoRefresh && data) {
+      intervalRef.current = setInterval(() => {
+        fetchData(false);
+      }, refreshInterval * 1000);
+    } else if (intervalRef.current && !autoRefresh) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
@@ -229,6 +244,7 @@ export default function Home() {
   const exportToCSV = () => {
     if (!data && !dimoData) return;
 
+    const walletValue = calculateWalletValue();
     const vehicleRows = dimoData?.vehicles ? dimoData.vehicles.map(v => [v.tokenId, `${v.year} ${v.make} ${v.model}`]) : [];
     
     const rows = [
@@ -242,12 +258,19 @@ export default function Home() {
       [''],
       ['Helium Network'],
       ['Metric', 'Value'],
-      ['Total Hotspots', data?.heliumStats.totalHotspots || ''],
-      ['Active Hotspots', data?.heliumStats.activeHotspots || ''],
+      ['Total Hotspots', data?.heliumStats.totalHotspots?.toString() || ''],
+      ['Active Hotspots', data?.heliumStats.activeHotspots?.toString() || ''],
+      [''],
+      ['Wallet Balances'],
+      ['Token', 'Balance', 'USD Value'],
+      ['HNT', data?.wallet?.balances.hnt || '0', ((parseFloat(data?.wallet?.balances.hnt || '0')) * (data?.hntPrice.usd || 0)).toFixed(2)],
+      ['IOT', data?.wallet?.balances.iot || '0', ((parseFloat(data?.wallet?.balances.iot || '0')) * (data?.iotPrice.usd || 0)).toFixed(2)],
+      ['MOBILE', data?.wallet?.balances.mobile || '0', ((parseFloat(data?.wallet?.balances.mobile || '0')) * (data?.mobilePrice.usd || 0)).toFixed(2)],
+      ['TOTAL', '', walletValue.toFixed(2)],
       [''],
       ['DIMO'],
       ['Metric', 'Value'],
-      ['Total Vehicles', dimoData?.totalVehicles || ''],
+      ['Total Vehicles', dimoData?.totalVehicles?.toString() || ''],
       ...vehicleRows,
     ];
 

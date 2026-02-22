@@ -5,10 +5,32 @@ import { useState } from 'react';
 export default function Landing() {
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      if (response.ok) {
+        setSubmitted(true);
+      } else {
+        const data = await response.json();
+        setError(data.error || 'Something went wrong');
+      }
+    } catch (err) {
+      setError('Failed to join waitlist');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -175,10 +197,12 @@ export default function Landing() {
                 />
                 <button
                   type="submit"
-                  className="w-full bg-[#ff6b35] hover:bg-[#ff8555] text-black font-bold py-4 rounded-xl transition-colors"
+                  disabled={loading}
+                  className="w-full bg-[#ff6b35] hover:bg-[#ff8555] disabled:bg-[#444] text-black font-bold py-4 rounded-xl transition-colors"
                 >
-                  Join Waitlist
+                  {loading ? 'Joining...' : 'Join Waitlist'}
                 </button>
+                {error && <p className="text-red-400 text-sm text-center mt-2">{error}</p>}
               </form>
             )}
             <p className="text-[#444] text-xs text-center mt-4">
