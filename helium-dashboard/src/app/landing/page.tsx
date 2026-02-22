@@ -102,7 +102,7 @@ export default function Landing() {
 
         <div className="text-center mb-20">
           <a
-            href="https://depin-dashboard.vercel.app"
+            href="/"
             className="inline-block bg-[#ff6b35] hover:bg-[#ff8555] text-black font-bold text-lg py-4 px-12 rounded-lg transition-colors"
           >
             Try the Demo →
@@ -127,7 +127,7 @@ export default function Landing() {
                 <li>✓ Telegram alerts</li>
               </ul>
               <a
-                href="https://depin-dashboard.vercel.app"
+                href="/"
                 className="block w-full border border-[#333] text-[#666] py-2 rounded-lg hover:border-[#ff6b35] hover:text-[#ff6b35] transition-colors"
               >
                 Get Started
