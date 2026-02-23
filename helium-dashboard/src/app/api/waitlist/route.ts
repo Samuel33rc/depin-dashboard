@@ -29,6 +29,31 @@ function writeWaitlist(entries: WaitlistEntry[]): void {
   }
 }
 
+async function sendDiscordNotification(email: string) {
+  const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
+  if (!webhookUrl) return;
+
+  try {
+    await fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        embeds: [{
+          title: '🎉 New Waitlist Signup!',
+          color: 0xff6b35,
+          fields: [
+            { name: 'Email', value: email },
+            { name: 'Time', value: new Date().toLocaleString() }
+          ],
+          footer: { text: 'DePIN Ops' }
+        }]
+      })
+    });
+  } catch (error) {
+    console.error('Discord notification error:', error);
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
@@ -57,6 +82,8 @@ export async function POST(request: Request) {
     });
 
     writeWaitlist(waitlist);
+    
+    await sendDiscordNotification(email);
     console.log('New waitlist signup:', email);
 
     return NextResponse.json(
@@ -75,7 +102,7 @@ export async function POST(request: Request) {
 export async function GET() {
   const waitlist = readWaitlist();
   return NextResponse.json(
-    { count: waitlist.length, message: 'Use POST to join waitlist' },
+    { count: waitlist.length, waitlist },
     { status: 200 }
   );
 }

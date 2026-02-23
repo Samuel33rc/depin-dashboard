@@ -59,10 +59,27 @@ vercel --prod
 - Helium API v2
 - DIMO API
 
-## Notes API
+## Waitlist
 
-Après la migration Helium vers Solana (2023), l'API a changé :
-- Ancien format : `api.helium.io/v1/...`
-- Nouveau format : `entities.nft.helium.io/v2/...`
+### Setup Discord Notification (Optional)
 
-Les adresses wallet doivent être au format Solana base58 (32-44 caractères).
+1. Create a Discord webhook:
+   - Go to Server Settings → Integrations → Webhooks
+   - Create new webhook
+   - Copy the webhook URL
+
+2. Add to Vercel environment variables:
+   - Key: `DISCORD_WEBHOOK_URL`
+   - Value: your webhook URL
+
+### Get Waitlist Data
+
+```bash
+# Via API (requires deployment)
+curl https://your-domain.com/api/waitlist
+```
+
+Or check locally:
+```bash
+cat waitlist.json
+```
