@@ -1,88 +1,88 @@
-# Setup Discord Notifications
+# Discord Notifications Setup
 
-## Pourquoi Discord?
-- Gratuit
-- Notifications en temps réel
-- Pas besoin d'autre compte
-
----
-
-## Étape 1: Créer un serveur Discord
-
-1. Télécharger Discord (ou aller sur discord.com)
-2. Clic sur "+" pour créer un nouveau serveur
-3. Nommer le serveur (ex: "DePIN Ops")
-4. C'est fait!
+## Why Discord?
+- Free
+- Real-time notifications
+- No other account needed
 
 ---
 
-## Étape 2: Créer un Webhook
+## Step 1: Create a Discord Server
 
-1. **Clic droit** sur le nom du serveur (dans la liste des salons) → **Server Settings**
-2. Menu gauche → **Integrations**
-3. Clic sur **Webhooks** → **New Webhook**
-4. Configurer:
+1. Download Discord (or go to discord.com)
+2. Click "+" to create a new server
+3. Name the server (e.g., "DePIN Ops")
+4. Done!
+
+---
+
+## Step 2: Create a Webhook
+
+1. **Right-click** on server name → **Server Settings**
+2. Left menu → **Integrations**
+3. Click **Webhooks** → **New Webhook**
+4. Configure:
    - **Name**: "Waitlist Alerts"
-   - **Channel**: Choisir un salon (ou créer un salon #waitlist)
-5. Clic sur **Copy Webhook URL**
-6. **Sauvegarder cette URL quelque part!** (elle ressemble à:
+   - **Channel**: Choose a channel (or create #waitlist)
+5. Click **Copy Webhook URL**
+6. **Save this URL!** (it looks like:
    `https://discord.com/api/webhooks/123456789/abcdef...`)
 
 ---
 
-## Étape 3: Configurer sur Vercel
+## Step 3: Configure in Vercel
 
-1. Aller sur [vercel.com](https://vercel.com)
-2. Sélectionner le projet **depin-ops**
-3. Cliquer sur **Settings** (en haut)
-4. Menu gauche → **Environment Variables**
-5. Clic sur **Add New**
-6. Remplir:
+1. Go to [vercel.com](https://vercel.com)
+2. Select project **depin-ops**
+3. Click **Settings**
+4. Left menu → **Environment Variables**
+5. Click **Add New**
+6. Fill in:
    - **Name**: `DISCORD_WEBHOOK_URL`
-   - **Value**: Coller l'URL du webhook copiée
+   - **Value**: Paste your webhook URL
    - **Environment**: Production
-7. Clic sur **Save**
+7. Click **Save**
 
 ---
 
-## Étape 4: Redéployer
+## Step 4: Redeploy
 
-1. Aller sur l'onglet **Deployments** dans Vercel
-2. Clic sur le dernier déploiement
-3. Clic sur **Redeploy** (pour prendre en compte la variable d'environnement)
-
----
-
-## Résultat
-
-Quand quelqu'un rejoint la waitlist:
-- Tu reçevras un message Discord avec l'email et l'heure
-- Les données sont aussi sauvegardées dans `waitlist.json`
+1. Go to **Deployments** tab in Vercel
+2. Click on the latest deployment
+3. Click **Redeploy** (to apply the environment variable)
 
 ---
 
-## Avant chaque déploiement
+## Result
+
+When someone joins the waitlist:
+- You'll receive a Discord message with email and time
+- Data is also saved in `waitlist.json`
+
+---
+
+## Before Each Deployment
 
 ```bash
-# 1. Sauvegarder la waitlist actuelle (remplacer par ton URL Vercel)
+# 1. Backup current waitlist (replace with your Vercel URL)
 curl -s https://depin-ops.vercel.app/api/waitlist > waitlist-backup.json
 
-# 2. Pusher le code
+# 2. Push code
 git push
 
-# 3. Après déploiement, les nouvelles inscriptions arrivent sur Discord
+# 3. After deployment, new signups will come to Discord
 ```
 
-**Alternative: Script automatique**
+**Alternative: Automatic script**
 ```bash
 ./scripts/export-waitlist.sh
 ```
 
 ---
 
-## Dépannage
+## Troubleshooting
 
-**Pas de notifications?**
-- Vérifier que l'URL du webhook est correcte
-- Vérifier que la variable est bien en "Production"
-- Redeployer après ajout de la variable
+**No notifications?**
+- Check that webhook URL is correct
+- Check that variable is set to "Production"
+- Redeploy after adding the variable

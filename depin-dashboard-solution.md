@@ -1,4 +1,4 @@
-# DePIN Dashboard - Solution Overview
+# DePIN Ops - Solution Overview
 
 ## 1. The Problem We Solve
 

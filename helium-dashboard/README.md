@@ -2,16 +2,16 @@
 
 Unified dashboard for DePIN monitoring and management.
 
-## Fonctionnalités
+## Features
 
-- Prix en temps réel HNT, IOT, MOBILE (via CoinGecko API)
-- Statistiques du réseau Helium
-- Support pour les adresses wallet Helium (format Solana)
-- Support DIMO (véhicules connectés)
-- Monitoring hotspots (online/offline)
-- Alertes Telegram pour hotspots offline
-- Design sombre moderne
-- Tests automatisés (unit + browser)
+- Real-time HNT, IOT, MOBILE prices (via CoinGecko API)
+- Helium network statistics
+- Helium wallet support (Solana format)
+- DIMO support (connected vehicles)
+- Hotspot monitoring (online/offline)
+- Telegram alerts for offline hotspots
+- Modern dark design
+- Automated tests (unit + browser)
 
 ## Installation
 
@@ -19,7 +19,7 @@ Unified dashboard for DePIN monitoring and management.
 npm install
 ```
 
-## Développement
+## Development
 
 ```bash
 npm run dev
@@ -28,23 +28,23 @@ npm run dev
 ## Tests
 
 ```bash
-# Tests unitaires
+# Unit tests
 npm run test
 
-# Tests browser (Playwright)
+# Browser tests (Playwright)
 npx tsx scripts/browser-test.ts
 
-# Tests API (manuel)
+# API tests (manual)
 ./scripts/test-api.sh
 
-# Couverture
+# Coverage
 npm run test:coverage
 ```
 
-## Déploiement
+## Deployment
 
 ```bash
-# Déployer sur Vercel
+# Deploy to Vercel
 vercel --prod
 ```
 

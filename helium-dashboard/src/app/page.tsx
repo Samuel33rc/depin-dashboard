@@ -295,7 +295,7 @@ export default function Home() {
           <div className="flex items-center gap-3 mb-2">
             <div className="w-3 h-3 bg-[#ff6b35] rounded-full animate-pulse"></div>
             <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
-              <span className="text-[#ff6b35]">//</span> DePIN OPS CENTER
+              <span className="text-[#ff6b35]">//</span> DePIN Ops Center
             </h1>
           </div>
           <p className="text-[#666] text-sm ml-6">Decentralized Infrastructure Command</p>
