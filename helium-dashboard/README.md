@@ -76,7 +76,7 @@ vercel --prod
 
 ```bash
 # Via API (requires deployment)
-curl https://your-domain.com/api/waitlist
+curl https://depin-ops.vercel.app/api/waitlist
 ```
 
 Or check locally:

@@ -33,7 +33,7 @@
 ## Étape 3: Configurer sur Vercel
 
 1. Aller sur [vercel.com](https://vercel.com)
-2. Sélectionner le projet **depin-dashboard**
+2. Sélectionner le projet **depin-ops**
 3. Cliquer sur **Settings** (en haut)
 4. Menu gauche → **Environment Variables**
 5. Clic sur **Add New**
@@ -64,8 +64,8 @@ Quand quelqu'un rejoint la waitlist:
 ## Avant chaque déploiement
 
 ```bash
-# 1. Sauvegarder la waitlist actuelle
-curl -s https://ton-projet.vercel.app/api/waitlist > waitlist-backup.json
+# 1. Sauvegarder la waitlist actuelle (remplacer par ton URL Vercel)
+curl -s https://depin-ops.vercel.app/api/waitlist > waitlist-backup.json
 
 # 2. Pusher le code
 git push
