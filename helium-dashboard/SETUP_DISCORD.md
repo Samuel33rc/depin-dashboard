@@ -61,14 +61,21 @@ Quand quelqu'un rejoint la waitlist:
 
 ---
 
-## Récupérer les données avant déploiement
+## Avant chaque déploiement
 
 ```bash
-# Local
-cat waitlist.json
+# 1. Sauvegarder la waitlist actuelle
+curl -s https://ton-projet.vercel.app/api/waitlist > waitlist-backup.json
 
-# API (après déploiement)
-curl https://ton-projet.vercel.app/api/waitlist
+# 2. Pusher le code
+git push
+
+# 3. Après déploiement, les nouvelles inscriptions arrivent sur Discord
+```
+
+**Alternative: Script automatique**
+```bash
+./scripts/export-waitlist.sh
 ```
 
 ---
